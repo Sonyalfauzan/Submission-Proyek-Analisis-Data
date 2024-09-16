@@ -58,6 +58,17 @@ plt.xlabel('Jam dalam Sehari')
 plt.ylabel('Hari dalam Seminggu (0: Minggu, 6: Sabtu)')
 st.pyplot(plt)
 
+# Bar Chart: Jumlah Pengguna Kasual vs Terdaftar
+st.subheader('Jumlah Pengguna Kasual vs Terdaftar')
+plt.figure(figsize=(10, 6))
+sns.barplot(x='dteday', y='casual', data=filtered_day_df, label='Kasual', color='skyblue')
+sns.barplot(x='dteday', y='registered', data=filtered_day_df, label='Terdaftar', color='coral', bottom=filtered_day_df['casual'])
+plt.xlabel('Tanggal')
+plt.ylabel('Jumlah Pengguna')
+plt.xticks(rotation=45)
+plt.legend()
+st.pyplot(plt)
+
 # Conclusion
 st.subheader('Conclusion')
 st.write('Dashboard ini menunjukkan pengaruh cuaca dan pola penyewaan sepeda berdasarkan hari dan jam dalam sehari.')
