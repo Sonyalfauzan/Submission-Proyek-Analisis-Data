@@ -24,6 +24,10 @@ st.sidebar.header('Filters')
 start_date = st.sidebar.date_input("Start Date", day_df['dteday'].min())
 end_date = st.sidebar.date_input("End Date", day_df['dteday'].max())
 
+# Ubah tipe data start_date dan end_date menjadi datetime64[ns]
+start_date = pd.to_datetime(start_date)
+end_date = pd.to_datetime(end_date)
+
 # Filter data by date
 filtered_day_df = day_df[(day_df['dteday'] >= start_date) & (day_df['dteday'] <= end_date)]
 filtered_hour_df = hour_df[(hour_df['dteday'] >= start_date) & (hour_df['dteday'] <= end_date)]
