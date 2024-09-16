@@ -64,6 +64,10 @@ st.pyplot(plt)
 
 # Bar Chart: Jumlah Pengguna Kasual vs Terdaftar
 st.subheader('Jumlah Pengguna Kasual vs Terdaftar')
+
+# Konversi kolom dteday ke string dengan format YYYY-MM-DD
+filtered_day_df['dteday'] = filtered_day_df['dteday'].dt.strftime('%Y-%m-%d')
+
 plt.figure(figsize=(10, 6))
 sns.barplot(x='dteday', y='casual', data=filtered_day_df, label='Kasual', color='skyblue')
 sns.barplot(x='dteday', y='registered', data=filtered_day_df, label='Terdaftar', color='coral', bottom=filtered_day_df['casual'])
