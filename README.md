@@ -6,7 +6,7 @@ Proyek ini menganalisis dataset Bike Sharing untuk memahami pengaruh cuaca dan p
 
 ### 1. Setting Environment
 
-Anda dapat memilih salah satu cara berikut untuk setup environment:
+Kita dapat memilih salah satu cara berikut untuk setup environment:
 
 **a. Menggunakan Anaconda:**
 
