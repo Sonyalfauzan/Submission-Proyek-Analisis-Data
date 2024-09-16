@@ -10,35 +10,54 @@ import seaborn as sns
 hour_df = pd.read_csv('hour.csv')
 day_df = pd.read_csv('day.csv')
 
+# Ubah tipe data 'dteday' menjadi datetime
+hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
+day_df['dteday'] = pd.to_datetime(day_df['dteday'])
+
 # Title
 st.title('Bike Sharing Dashboard')
 
 # Sidebar filters
 st.sidebar.header('Filters')
-selected_season = st.sidebar.selectbox('Season', hour_df['season'].unique())
-selected_weekday = st.sidebar.selectbox('Weekday', hour_df['weekday'].unique())
-selected_weathersit = st.sidebar.selectbox('Weathersit', hour_df['weathersit'].unique())
 
-# Filter data
-filtered_hour_df = hour_df[(hour_df['season'] == selected_season) &
-                              (hour_df['weekday'] == selected_weekday) &
-                              (hour_df['weathersit'] == selected_weathersit)]
+# Date filter
+start_date = st.sidebar.date_input("Start Date", day_df['dteday'].min())
+end_date = st.sidebar.date_input("End Date", day_df['dteday'].max())
+
+# Filter data by date
+filtered_day_df = day_df[(day_df['dteday'] >= start_date) & (day_df['dteday'] <= end_date)]
+filtered_hour_df = hour_df[(hour_df['dteday'] >= start_date) & (hour_df['dteday'] <= end_date)]
 
 # Visualizations
-st.subheader('Pengaruh Cuaca Terhadap Jumlah Penyewaan')
+
+# Line Chart: Jumlah Penyewaan Harian
+st.subheader('Jumlah Penyewaan Harian')
+plt.figure(figsize=(12, 6))
+plt.plot(filtered_day_df['dteday'], filtered_day_df['cnt'])
+plt.xlabel('Tanggal')
+plt.ylabel('Jumlah Penyewaan')
+plt.xticks(rotation=45)
+st.pyplot(plt)
+
+# Bar Chart: Rata-rata Jumlah Penyewaan Berdasarkan Jenis Cuaca
+st.subheader('Rata-rata Jumlah Penyewaan Berdasarkan Jenis Cuaca')
 plt.figure(figsize=(10, 6))
 sns.barplot(x='weathersit', y='cnt', data=filtered_hour_df)
 plt.xlabel('Jenis Cuaca (1: Cerah, 2: Berkabut, 3: Hujan Ringan, 4: Hujan Lebat)')
 plt.ylabel('Jumlah Penyewaan')
 st.pyplot(plt)
 
-st.subheader('Pola Penyewaan Sepeda Berdasarkan Jam')
-plt.figure(figsize=(10, 6))
-sns.lineplot(x='hr', y='cnt', data=filtered_hour_df)
+# Heatmap: Pola Penyewaan Sepeda Berdasarkan Hari dan Jam
+st.subheader('Pola Penyewaan Sepeda Berdasarkan Hari dan Jam')
+weekday_hour_df = filtered_hour_df.groupby(['weekday', 'hr'])['cnt'].mean().reset_index()
+weekday_hour_df = weekday_hour_df.pivot('weekday', 'hr', 'cnt')
+plt.figure(figsize=(12, 6))
+sns.heatmap(weekday_hour_df, cmap='coolwarm')
+plt.title('Pola Penyewaan Sepeda Berdasarkan Hari dan Jam')
 plt.xlabel('Jam dalam Sehari')
-plt.ylabel('Jumlah Penyewaan')
+plt.ylabel('Hari dalam Seminggu (0: Minggu, 6: Sabtu)')
 st.pyplot(plt)
 
 # Conclusion
 st.subheader('Conclusion')
-st.write('Dashboard ini menunjukkan pengaruh cuaca dan pola penyewaan sepeda berdasarkan jam dalam sehari.')
+st.write('Dashboard ini menunjukkan pengaruh cuaca dan pola penyewaan sepeda berdasarkan hari dan jam dalam sehari.')
