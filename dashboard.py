@@ -54,7 +54,7 @@ st.pyplot(plt)
 # Heatmap: Pola Penyewaan Sepeda Berdasarkan Hari dan Jam
 st.subheader('Pola Penyewaan Sepeda Berdasarkan Hari dan Jam')
 weekday_hour_df = filtered_hour_df.groupby(['weekday', 'hr'])['cnt'].mean().reset_index()
-weekday_hour_df = weekday_hour_df.pivot('weekday', 'hr', 'cnt')
+weekday_hour_df = weekday_hour_df.pivot_table(values='cnt', index='weekday', columns='hr')  # Gunakan pivot_table()
 plt.figure(figsize=(12, 6))
 sns.heatmap(weekday_hour_df, cmap='coolwarm')
 plt.title('Pola Penyewaan Sepeda Berdasarkan Hari dan Jam')
